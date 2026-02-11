@@ -42,7 +42,8 @@
         }
     </script>
     <style>
-        body { background-color: #f5f5f7; font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+        /* Sfondo impostato su transparent per integrazione in Instapage */
+        body { background-color: transparent; font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
         
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -79,18 +80,20 @@
             <div class="bg-gray-200/60 p-1.5 rounded-full flex gap-1 backdrop-blur-md shadow-inner items-center">
                 <div class="relative">
                     <span class="absolute -top-5 left-1/2 transform -translate-x-1/2 bg-vivi-orange text-white text-[9px] font-bold px-2 py-0.5 rounded shadow-sm uppercase whitespace-nowrap z-20">La più conveniente</span>
+                    <!-- ICONA INGRANDITA: w-10 h-10 -->
                     <button onclick="switchTab('dual')" id="tab-dual" class="tab-btn tab-active bg-gradient-dual px-6 py-3 rounded-full text-sm flex items-center gap-2">
-                        <img src="https://vivienergia.imgix.net/uploads/2026/02/11155509/Dual_4.png" class="w-6 h-6 object-contain brightness-0 invert" alt="Dual">
+                        <img src="https://storage.googleapis.com/instapage-user-media/c4efe85c/65046328-0-icone-lucegas-bianco.png" class="w-10 h-10 object-contain" alt="Dual">
                         <span>Luce e Gas</span>
                     </button>
                 </div>
 
+                <!-- ICONE INGRANDITE: w-10 h-10 -->
                 <button onclick="switchTab('luce')" id="tab-luce" class="tab-btn tab-inactive px-6 py-3 rounded-full text-sm flex items-center gap-2">
-                    <img src="https://vivienergia.imgix.net/uploads/2026/02/11155507/Luce_4B.png" class="w-6 h-6 object-contain opacity-60" alt="Luce">
+                    <img src="https://storage.googleapis.com/instapage-user-media/c4efe85c/65046326-0-icone-luce-bianco.png" class="w-10 h-10 object-contain opacity-60 brightness-0" alt="Luce">
                     <span>Luce</span>
                 </button>
                 <button onclick="switchTab('gas')" id="tab-gas" class="tab-btn tab-inactive px-6 py-3 rounded-full text-sm flex items-center gap-2">
-                    <img src="https://vivienergia.imgix.net/uploads/2026/02/11155512/Gas_4.png" class="w-6 h-6 object-contain opacity-60" alt="Gas">
+                    <img src="https://storage.googleapis.com/instapage-user-media/c4efe85c/65046324-0-icone-gas-bianco.png" class="w-10 h-10 object-contain opacity-60 brightness-0" alt="Gas">
                     <span>Gas</span>
                 </button>
             </div>
@@ -216,26 +219,25 @@
     <!-- TEMPLATE BOX BIANCO -->
     <template id="white-box-template">
         <div class="bg-white rounded-2xl shadow-inner-box p-6 relative border border-gray-100">
-            <!-- Badge Bonus -->
-            <div class="absolute -top-3 right-6 text-white px-4 py-1.5 rounded-bl-xl rounded-tr-xl text-xs font-bold shadow-md flex flex-col items-center leading-tight bonus-badge-container">
-                <span class="text-[9px] opacity-90 font-medium">BONUS fino a</span>
-                <span class="text-base box-bonus-val">132€*</span>
+            <!-- Badge Bonus Ingrandito -->
+            <div class="absolute -top-3 right-6 text-white px-5 py-2 rounded-bl-xl rounded-tr-xl shadow-md flex flex-col items-center leading-tight bonus-badge-container">
+                <span class="text-[10px] opacity-90 font-medium">BONUS fino a</span>
+                <span class="text-2xl font-bold box-bonus-val">132€*</span>
             </div>
 
             <!-- Header: Icona + Titolo -->
             <div class="flex items-center gap-4 mb-5">
-                <!-- ICONA GRANDE, BOLLINO PICCOLO (w-16 h-16) -->
-                <div class="w-16 h-16 rounded-full flex items-center justify-center text-white text-lg box-icon-bg shadow-md p-0.5">
-                    <!-- Icona ingrandita al massimo (w-full) -->
-                    <img src="" alt="Icon" class="box-icon-img w-11 h-11 object-contain brightness-0 invert">
+                <!-- ICONA -->
+                <div class="w-20 h-20 flex items-center justify-center text-white text-lg box-icon-bg p-0 flex-shrink-0">
+                    <img src="" alt="Icon" class="box-icon-img w-full h-full object-contain">
                 </div>
-                <div>
-                    <div class="flex items-center gap-2">
-                        <span class="font-bold text-gray-800 text-lg box-title">Luce</span>
-                        <span class="hidden box-green-tag border border-green-500 text-green-600 text-[10px] font-bold px-2 py-0.5 rounded uppercase flex items-center gap-1">
-                             <!-- Il contenuto verrà aggiornato via JS -->
-                        </span>
-                    </div>
+                <!-- Titolo + Green Label -->
+                <div class="flex flex-col justify-center">
+                    <span class="font-bold text-gray-800 text-lg box-title leading-none">Luce</span>
+                    <!-- Green Tag: Niente bordo, sotto a Luce -->
+                    <span class="hidden box-green-tag mt-1 flex items-start gap-1">
+                         <!-- Il contenuto verrà aggiornato via JS -->
+                    </span>
                 </div>
             </div>
 
@@ -280,11 +282,13 @@
                 const btn = document.getElementById(`tab-${t}`);
                 const img = btn.querySelector('img');
                 
+                // Stato inattivo default
                 btn.className = "tab-btn tab-inactive px-6 py-3 rounded-full text-sm flex items-center gap-2";
-                img.classList.add('opacity-60');
-                img.classList.remove('brightness-0', 'invert');
+                img.classList.add('opacity-60', 'brightness-0');
+                img.classList.remove('invert');
 
                 if (t === tab) {
+                    // Stato attivo
                     btn.classList.remove('tab-inactive');
                     btn.classList.add('tab-active');
                     
@@ -292,8 +296,8 @@
                     else if(t === 'luce') btn.classList.add('bg-gradient-luce');
                     else if(t === 'gas') btn.classList.add('bg-gradient-gas');
                     
-                    img.classList.remove('opacity-60');
-                    img.classList.add('brightness-0', 'invert');
+                    // Icona attiva
+                    img.classList.remove('opacity-60', 'brightness-0');
                 }
             });
 
@@ -399,25 +403,24 @@
             const iconImg = clone.querySelector('.box-icon-img');
             const bonusBadge = clone.querySelector('.bonus-badge-container');
             
+            // Reset filtri
+            iconImg.classList.remove('brightness-0', 'invert');
+
             if (isLuce) {
-                iconBg.classList.add('bg-gradient-luce'); 
-                iconImg.src = "https://vivienergia.imgix.net/uploads/2026/02/11155507/Luce_4B.png";
+                iconImg.src = "https://storage.googleapis.com/instapage-user-media/c4efe85c/65694286-0-IconaBolla-Luce.svg";
                 clone.querySelector('.box-title').textContent = 'Luce';
                 
-                // --- GREEN TAG UPDATE ---
                 const greenTag = clone.querySelector('.box-green-tag');
                 greenTag.classList.remove('hidden');
-                // Aggiunto text-left e leading-tight per gestire le due righe
+                // Label Green: testo verde, piccola icona, senza bordo, SU UNA RIGA
                 greenTag.innerHTML = `
                     <img src="https://v.fastcdn.co/t/4fe35e38/103c13e8/1769856097-65077022-30x30-eco-24dp-6EC18A-FILL.png" class="w-4 h-4 object-contain" alt="Green">
-                    <span class="text-left leading-tight">100% energia<br>elettrica green</span>
+                    <span class="text-left text-vivi-green text-[10px] font-bold whitespace-nowrap">100% energia elettrica green</span>
                 `;
-                // -----------------------
 
                 bonusBadge.classList.add('bg-gradient-luce');
             } else {
-                iconBg.classList.add('bg-gradient-gas');
-                iconImg.src = "https://vivienergia.imgix.net/uploads/2026/02/11155512/Gas_4.png";
+                iconImg.src = "https://storage.googleapis.com/instapage-user-media/c4efe85c/65694287-0-IconaBolla-Gas.svg";
                 clone.querySelector('.box-title').textContent = 'Gas';
                 bonusBadge.classList.add('bg-gradient-gas');
             }
@@ -447,8 +450,8 @@
                     }
                     fasce.forEach(f => {
                         const row = document.createElement('div');
-                        row.className = "flex justify-between items-center text-sm";
-                        row.innerHTML = `<span class="text-gray-500">${f.label}</span><span class="font-bold text-gray-800">${f.value}</span>`;
+                        row.className = "flex justify-between items-center mb-1";
+                        row.innerHTML = `<span class="text-gray-500 text-sm font-medium">${f.label}</span><span class="font-bold text-gray-800 text-lg">${f.value}</span>`;
                         contentDiv.appendChild(row);
                     });
                 } else {
@@ -482,7 +485,7 @@
                         const row = document.createElement('div');
                         row.className = "flex justify-between items-center text-sm min-h-[24px]";
                         if (idx === 1) {
-                            row.innerHTML = `<span class="text-gray-500">${f}</span><span class="font-bold text-gray-800 text-base">${indexName} + ${spread}</span>`;
+                            row.innerHTML = `<span class="text-gray-500">${f}</span><span class="font-bold text-gray-800 text-lg">${indexName} + ${spread}</span>`;
                         } else {
                             row.innerHTML = `<span class="text-gray-500">${f}</span>`;
                         }
