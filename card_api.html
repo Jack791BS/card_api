@@ -233,7 +233,7 @@
                     <div class="flex items-center gap-2">
                         <span class="font-bold text-gray-800 text-lg box-title">Luce</span>
                         <span class="hidden box-green-tag border border-green-500 text-green-600 text-[10px] font-bold px-2 py-0.5 rounded uppercase flex items-center gap-1">
-                            <i class="fas fa-leaf"></i> 100% Green
+                             <!-- Il contenuto verrà aggiornato via JS -->
                         </span>
                     </div>
                 </div>
@@ -403,7 +403,17 @@
                 iconBg.classList.add('bg-gradient-luce'); 
                 iconImg.src = "https://vivienergia.imgix.net/uploads/2026/02/11155507/Luce_4B.png";
                 clone.querySelector('.box-title').textContent = 'Luce';
-                clone.querySelector('.box-green-tag').classList.remove('hidden');
+                
+                // --- GREEN TAG UPDATE ---
+                const greenTag = clone.querySelector('.box-green-tag');
+                greenTag.classList.remove('hidden');
+                // Aggiunto text-left e leading-tight per gestire le due righe
+                greenTag.innerHTML = `
+                    <img src="https://v.fastcdn.co/t/4fe35e38/103c13e8/1769856097-65077022-30x30-eco-24dp-6EC18A-FILL.png" class="w-4 h-4 object-contain" alt="Green">
+                    <span class="text-left leading-tight">100% energia<br>elettrica green</span>
+                `;
+                // -----------------------
+
                 bonusBadge.classList.add('bg-gradient-luce');
             } else {
                 iconBg.classList.add('bg-gradient-gas');
