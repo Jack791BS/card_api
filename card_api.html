@@ -68,17 +68,20 @@
     <div class="w-full max-w-7xl mx-auto">
         
         <!-- Header / Tabs -->
-        <div class="flex justify-center mb-8 relative z-10">
-            <!-- Badge "La più conveniente" sopra il tab Dual -->
-            <div class="absolute -top-3 left-1/2 transform -translate-x-24 md:-translate-x-32 z-20">
-                <span class="bg-vivi-orange text-white text-[10px] font-bold px-2 py-0.5 rounded shadow-sm uppercase">La più conveniente</span>
-            </div>
+        <div class="flex justify-center mb-10 relative z-10">
+            <div class="bg-gray-200/60 p-1.5 rounded-full flex gap-1 backdrop-blur-md shadow-inner items-center">
+                
+                <!-- Tab Luce e Gas con Badge Centrato -->
+                <div class="relative">
+                    <!-- Badge posizionato assolutamente rispetto a questo wrapper -->
+                    <span class="absolute -top-5 left-1/2 transform -translate-x-1/2 bg-vivi-orange text-white text-[9px] font-bold px-2 py-0.5 rounded shadow-sm uppercase whitespace-nowrap z-20">La più conveniente</span>
+                    
+                    <button onclick="switchTab('dual')" id="tab-dual" class="tab-btn tab-active bg-gradient-dual px-6 py-3 rounded-full text-sm flex items-center gap-2">
+                        <img src="https://vivienergia.imgix.net/uploads/2026/02/11155509/Dual_4.png" class="w-6 h-6 object-contain brightness-0 invert" alt="Dual">
+                        <span>Luce e Gas</span>
+                    </button>
+                </div>
 
-            <div class="bg-gray-200/60 p-1.5 rounded-full flex gap-1 backdrop-blur-md shadow-inner">
-                <button onclick="switchTab('dual')" id="tab-dual" class="tab-btn tab-active bg-gradient-dual px-6 py-3 rounded-full text-sm flex items-center gap-2">
-                    <img src="https://vivienergia.imgix.net/uploads/2026/02/11155509/Dual_4.png" class="w-6 h-6 object-contain brightness-0 invert" alt="Dual">
-                    <span>Luce e Gas</span>
-                </button>
                 <button onclick="switchTab('luce')" id="tab-luce" class="tab-btn tab-inactive px-6 py-3 rounded-full text-sm flex items-center gap-2">
                     <img src="https://vivienergia.imgix.net/uploads/2026/02/11155507/Luce_4B.png" class="w-6 h-6 object-contain opacity-60" alt="Luce">
                     <span>Luce</span>
@@ -212,9 +215,10 @@
 
             <!-- Header: Icona + Titolo -->
             <div class="flex items-center gap-4 mb-5">
-                <!-- ICONA INGRANDITA -->
-                <div class="w-16 h-16 rounded-full flex items-center justify-center text-white text-lg box-icon-bg shadow-md">
-                    <img src="" alt="Icon" class="box-icon-img w-10 h-10 object-contain brightness-0 invert">
+                <!-- ICONA E SFONDO INGRANDITI -->
+                <!-- Applicazione gradiente tramite JS -->
+                <div class="w-20 h-20 rounded-full flex items-center justify-center text-white text-lg box-icon-bg shadow-md">
+                    <img src="" alt="Icon" class="box-icon-img w-12 h-12 object-contain brightness-0 invert">
                 </div>
                 <div>
                     <div class="flex items-center gap-2">
@@ -281,7 +285,7 @@
                 const btn = document.getElementById(`tab-${t}`);
                 const img = btn.querySelector('img');
                 
-                // Rimuovi classi attive/gradienti
+                // Reset stati
                 btn.className = "tab-btn tab-inactive px-6 py-3 rounded-full text-sm flex items-center gap-2";
                 img.classList.add('opacity-60');
                 img.classList.remove('brightness-0', 'invert');
@@ -377,7 +381,8 @@
             
             if (isLuce) {
                 // Stile LUCE
-                iconBg.classList.add('bg-vivi-orange'); 
+                // Sfumatura SFONDO Icona: Magenta -> Arancio
+                iconBg.classList.add('bg-gradient-luce'); 
                 iconImg.src = "https://vivienergia.imgix.net/uploads/2026/02/11155507/Luce_4B.png";
                 clone.querySelector('.box-title').textContent = 'Luce';
                 clone.querySelector('.box-green-tag').classList.remove('hidden');
@@ -385,7 +390,8 @@
                 bonusBadge.classList.add('bg-gradient-luce');
             } else {
                 // Stile GAS
-                iconBg.classList.add('bg-vivi-teal-light');
+                // Sfumatura SFONDO Icona: Blu -> Viola
+                iconBg.classList.add('bg-gradient-gas');
                 iconImg.src = "https://vivienergia.imgix.net/uploads/2026/02/11155512/Gas_4.png";
                 clone.querySelector('.box-title').textContent = 'Gas';
                 // Sfumatura Badge Bonus: Blu -> Viola
