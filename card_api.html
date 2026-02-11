@@ -231,7 +231,7 @@
         <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] flex flex-col relative overflow-hidden">
             <!-- Header Modal -->
             <div class="flex justify-between items-center p-5 border-b border-gray-100 bg-white z-10">
-                <h3 class="text-xl font-bold text-vivi-text text-center w-full">Dettagli offerta</h3>
+                <h3 class="text-xl font-bold text-vivi-price text-center w-full">Dettagli offerta</h3>
                 <button onclick="closeModal()" class="absolute right-5 text-gray-400 hover:text-gray-600 focus:outline-none">
                     <i class="fas fa-times text-2xl"></i>
                 </button>
@@ -532,27 +532,27 @@
 
             services.forEach(svc => {
                 const isLuce = svc === 'luce';
-                const iconClass = isLuce ? "fa-plug" : "fa-fire";
-                const iconColor = isLuce ? "text-vivi-orange" : "text-vivi-blue";
+                // USE BOLLE ICONS (SVG)
+                const iconUrl = isLuce 
+                    ? "https://storage.googleapis.com/instapage-user-media/c4efe85c/65694286-0-IconaBolla-Luce.svg" 
+                    : "https://storage.googleapis.com/instapage-user-media/c4efe85c/65694287-0-IconaBolla-Gas.svg";
                 const title = isLuce ? "Luce" : "Gas";
                 
                 // Header Sezione
                 html += `
-                    <div class="flex items-center gap-2 mb-4 mt-2">
-                        <div class="w-8 h-8 rounded-full ${isLuce ? 'bg-orange-100' : 'bg-blue-100'} flex items-center justify-center">
-                            <i class="fas ${iconClass} ${iconColor} text-sm"></i>
-                        </div>
-                        <h4 class="font-bold text-lg text-vivi-text">${title}</h4>
+                    <div class="flex items-center gap-3 mb-4 mt-2">
+                        <img src="${iconUrl}" class="w-8 h-8 object-contain" alt="${title}">
+                        <h4 class="font-bold text-lg text-vivi-price">${title}</h4>
                     </div>
                 `;
 
-                // 1. Sezione Prezzi (da API energyBio o gas)
+                // 1. Sezione Prezzi
                 const priceHeader = isLuce ? 
                     (type === 'fix' ? 'Prezzo bloccato per due anni' : 'Prezzo energia') :
                     (type === 'fix' ? 'Prezzo bloccato per due anni' : 'Prezzo gas');
                 
                 html += `<div class="mb-4">
-                    <h5 class="text-sm font-bold text-vivi-text mb-2">${priceHeader}</h5>`;
+                    <h5 class="text-sm font-bold text-vivi-price mb-2">${priceHeader}</h5>`;
                 
                 if (isLuce) {
                     const energy = data.energyBio || [];
@@ -573,18 +573,17 @@
                 }
                 html += `</div>`;
 
-                // Preparazione Array Commercializzazione
+                // Costi Commercializzazione
                 const commArr = isLuce ? 
                     (data.energyBioCommercialization || data.energyCommercialization || []) : 
                     (data.gasCommercialization || []);
 
-                // Filtro Costi (Escludo voci con "Bonus")
                 const costs = commArr.filter(i => i.label && !i.label.toLowerCase().includes('bonus'));
                 if(costs.length > 0) {
                     html += `<div class="mb-4">
-                        <h5 class="text-sm font-bold text-vivi-text mb-2">Costi di commercializzazione</h5>`;
+                        <h5 class="text-sm font-bold text-vivi-price mb-2">Costi di commercializzazione</h5>`;
                     costs.forEach(c => {
-                        if(c.label.trim() === "") return; // Skip empty labels
+                        if(c.label.trim() === "") return; 
                         html += `<div class="flex justify-between text-sm py-1 border-b border-gray-50 last:border-0">
                             <span class="text-gray-500">${c.label}</span>
                             <span class="font-bold text-vivi-price">${c.value}</span>
@@ -593,33 +592,31 @@
                     html += `</div>`;
                 }
 
-                // Filtro Bonus
+                // Bonus
                 const bonuses = commArr.filter(i => i.label && i.label.toLowerCase().includes('bonus'));
-                // Aggiungi Totale Bonus specifico se presente
                 const totalBonusObj = data.totaleBonus ? data.totaleBonus.find(b => b.label && b.label.toLowerCase() === svc) : null;
                 
                 if(bonuses.length > 0 || totalBonusObj) {
                     html += `<div class="mb-6">
-                        <h5 class="text-sm font-bold text-vivi-text mb-2">Bonus</h5>`;
+                        <h5 class="text-sm font-bold text-vivi-price mb-2">Bonus</h5>`;
                     
                     bonuses.forEach(b => {
                         html += `<div class="flex justify-between text-sm py-1 border-b border-gray-50 last:border-0">
                             <span class="text-gray-500">${b.label}</span>
-                            <span class="font-bold text-vivi-text">${b.value}</span>
+                            <span class="font-bold text-vivi-price">${b.value}</span>
                         </div>`;
                     });
 
                     if(totalBonusObj) {
                         html += `<div class="flex justify-between text-sm py-2 border-t border-gray-100 mt-1">
-                            <span class="font-bold text-vivi-text">Totale Bonus*</span>
-                            <span class="font-bold text-vivi-text">${totalBonusObj.value}</span>
+                            <span class="font-bold text-vivi-price">Totale Bonus*</span>
+                            <span class="font-bold text-vivi-price">${totalBonusObj.value}</span>
                         </div>`;
                     }
                     html += `</div>`;
                 }
             });
 
-            // Note finali
             if(data.noteEsplicative) {
                 html += `<div class="text-[10px] text-gray-400 mt-6 leading-relaxed border-t border-gray-200 pt-4">
                     ${data.noteEsplicative}
@@ -628,7 +625,7 @@
 
             content.innerHTML = html;
             modal.classList.remove('hidden');
-            document.body.style.overflow = 'hidden'; // Prevent background scroll
+            document.body.style.overflow = 'hidden';
         }
 
         function closeModal() {
@@ -637,7 +634,6 @@
             document.body.style.overflow = '';
         }
 
-        // Close on backdrop click
         document.getElementById('details-modal').addEventListener('click', function(e) {
             if (e.target === this) closeModal();
         });
