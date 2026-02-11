@@ -23,7 +23,8 @@
                         'vivi-teal-dark': '#0085bd',
                         'vivi-teal-light': '#26a9e0',
                         'vivi-text': '#1d1d1f',
-                        'vivi-gray': '#666666'
+                        'vivi-gray': '#666666',
+                        'vivi-price': '#445166' // Nuovo colore prezzi richiesto
                     },
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
@@ -259,7 +260,8 @@
                     <div class="text-[10px] md:text-xs font-bold text-gray-700">Quota fissa</div>
                     <div class="text-[8px] md:text-[9px] text-gray-400">IVA e imposte escluse</div>
                 </div>
-                <div class="text-base md:text-lg font-bold text-gray-800 box-quota-val">10 €/mese</div>
+                <!-- Quota fissa con colore personalizzato -->
+                <div class="text-base md:text-lg font-bold text-vivi-price box-quota-val">10 €/mese</div>
             </div>
         </div>
     </template>
@@ -480,8 +482,8 @@
                     fasce.forEach(f => {
                         const row = document.createElement('div');
                         row.className = "flex justify-between items-center mb-1";
-                        // Price size mobile optimized
-                        row.innerHTML = `<span class="text-gray-500 text-xs md:text-sm font-medium">${f.label}</span><span class="font-bold text-gray-800 text-base md:text-lg">${f.value}</span>`;
+                        // Price color updated to text-vivi-price
+                        row.innerHTML = `<span class="text-gray-500 text-xs md:text-sm font-medium">${f.label}</span><span class="font-bold text-vivi-price text-base md:text-lg">${f.value}</span>`;
                         contentDiv.appendChild(row);
                     });
                 } else {
@@ -489,7 +491,7 @@
                     if(data.gas && data.gas.length > 0) val = data.gas[0].value;
                     const row = document.createElement('div');
                     row.className = "flex justify-between items-center text-xs md:text-sm";
-                    row.innerHTML = `<span class="text-gray-500">Materia prima</span><span class="font-bold text-gray-800 text-base md:text-lg">${val}</span>`;
+                    row.innerHTML = `<span class="text-gray-500">Materia prima</span><span class="font-bold text-vivi-price text-base md:text-lg">${val}</span>`;
                     contentDiv.appendChild(row);
                 }
             } else {
@@ -515,7 +517,7 @@
                         const row = document.createElement('div');
                         row.className = "flex justify-between items-center text-xs md:text-sm min-h-[20px] md:min-h-[24px]";
                         if (idx === 1) {
-                            row.innerHTML = `<span class="text-gray-500">${f}</span><span class="font-bold text-gray-800 text-base md:text-lg">${indexName} + ${spread}</span>`;
+                            row.innerHTML = `<span class="text-gray-500">${f}</span><span class="font-bold text-vivi-price text-base md:text-lg">${indexName} + ${spread}</span>`;
                         } else {
                             row.innerHTML = `<span class="text-gray-500">${f}</span>`;
                         }
@@ -524,7 +526,7 @@
                 } else {
                     const row = document.createElement('div');
                     row.className = "flex justify-between items-center text-xs md:text-sm";
-                    row.innerHTML = `<span class="text-gray-500">Prezzo gas</span><span class="font-bold text-gray-800 text-base md:text-lg">${indexName} + ${spread}</span>`;
+                    row.innerHTML = `<span class="text-gray-500">Prezzo gas</span><span class="font-bold text-vivi-price text-base md:text-lg">${indexName} + ${spread}</span>`;
                     contentDiv.appendChild(row);
                 }
             }
