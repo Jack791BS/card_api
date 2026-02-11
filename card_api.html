@@ -33,7 +33,10 @@
                         'inner-box': '0 4px 15px rgba(0,0,0,0.05)'
                     },
                     backgroundImage: {
-                        'gradient-bonus': 'linear-gradient(90deg, #26a9e0 0%, #6EC18A 100%)' // Teal/Green gradient for badges
+                        // Sfumature da Brandbook (image_b62814.png)
+                        'gradient-luce': 'linear-gradient(90deg, #E81C69 0%, #F09724 100%)', // Magenta -> Arancio
+                        'gradient-gas': 'linear-gradient(90deg, #077BBE 0%, #7E2889 100%)',  // Blu -> Viola
+                        'gradient-dual': 'linear-gradient(90deg, #3AA3DA 0%, #6EC18A 100%)'  // Azzurro -> Verde
                     }
                 }
             }
@@ -48,17 +51,16 @@
 
         /* Tabs Style */
         .tab-btn { transition: all 0.3s ease; }
-        .tab-active { background-color: #ffffff; color: #1d1d1f; box-shadow: 0 2px 8px rgba(0,0,0,0.1); font-weight: 600; transform: scale(1.02); }
-        .tab-inactive { color: #666; font-weight: 500; opacity: 0.8; }
+        /* Il background del tab attivo viene gestito via JS per applicare il gradiente corretto */
+        .tab-active { color: white; box-shadow: 0 4px 12px rgba(0,0,0,0.15); font-weight: 700; transform: scale(1.02); border: none; }
+        .tab-inactive { color: #666; font-weight: 500; opacity: 0.8; background-color: transparent; }
         .tab-inactive:hover { opacity: 1; background-color: rgba(255,255,255,0.5); }
 
         /* Animazioni Card */
         .offer-card { transition: transform 0.3s ease; }
         .offer-card:hover { transform: translateY(-5px); }
 
-        /* Specifiche per riprodurre esattamente l'immagine */
-        .dashed-line { border-top: 1px dashed #cbd5e1; margin: 12px 0; }
-        .bonus-badge { background: linear-gradient(90deg, #3AA3DA 0%, #F09724 100%); } /* Placeholder gradient, will be set by class */
+        .dashed-line { border-top: 1px dashed #cbd5e1; margin: 15px 0; }
     </style>
 </head>
 <body class="p-4 md:p-10 flex flex-col items-center min-h-screen">
@@ -72,17 +74,17 @@
                 <span class="bg-vivi-orange text-white text-[10px] font-bold px-2 py-0.5 rounded shadow-sm uppercase">La più conveniente</span>
             </div>
 
-            <div class="bg-gray-200/60 p-1.5 rounded-full flex gap-1 backdrop-blur-md">
-                <button onclick="switchTab('dual')" id="tab-dual" class="tab-btn tab-active px-6 py-2.5 rounded-full text-sm flex items-center gap-2">
-                    <img src="https://vivienergia.imgix.net/uploads/2026/02/11155509/Dual_4.png" class="w-5 h-5 object-contain" alt="Dual">
+            <div class="bg-gray-200/60 p-1.5 rounded-full flex gap-1 backdrop-blur-md shadow-inner">
+                <button onclick="switchTab('dual')" id="tab-dual" class="tab-btn tab-active bg-gradient-dual px-6 py-3 rounded-full text-sm flex items-center gap-2">
+                    <img src="https://vivienergia.imgix.net/uploads/2026/02/11155509/Dual_4.png" class="w-6 h-6 object-contain brightness-0 invert" alt="Dual">
                     <span>Luce e Gas</span>
                 </button>
-                <button onclick="switchTab('luce')" id="tab-luce" class="tab-btn tab-inactive px-6 py-2.5 rounded-full text-sm flex items-center gap-2">
-                    <img src="https://vivienergia.imgix.net/uploads/2026/02/11155507/Luce_4B.png" class="w-5 h-5 object-contain opacity-60" alt="Luce">
+                <button onclick="switchTab('luce')" id="tab-luce" class="tab-btn tab-inactive px-6 py-3 rounded-full text-sm flex items-center gap-2">
+                    <img src="https://vivienergia.imgix.net/uploads/2026/02/11155507/Luce_4B.png" class="w-6 h-6 object-contain opacity-60" alt="Luce">
                     <span>Luce</span>
                 </button>
-                <button onclick="switchTab('gas')" id="tab-gas" class="tab-btn tab-inactive px-6 py-2.5 rounded-full text-sm flex items-center gap-2">
-                    <img src="https://vivienergia.imgix.net/uploads/2026/02/11155512/Gas_4.png" class="w-5 h-5 object-contain opacity-60" alt="Gas">
+                <button onclick="switchTab('gas')" id="tab-gas" class="tab-btn tab-inactive px-6 py-3 rounded-full text-sm flex items-center gap-2">
+                    <img src="https://vivienergia.imgix.net/uploads/2026/02/11155512/Gas_4.png" class="w-6 h-6 object-contain opacity-60" alt="Gas">
                     <span>Gas</span>
                 </button>
             </div>
@@ -97,7 +99,7 @@
             <i class="fas fa-exclamation-circle mr-2"></i> Impossibile caricare i dati.
         </div>
 
-        <!-- Cards Container (Scroll orizzontale su mobile con Snap) -->
+        <!-- Cards Container -->
         <div id="cards-container" class="hidden w-full flex flex-row md:grid md:grid-cols-2 gap-6 md:gap-10 overflow-x-auto md:overflow-visible snap-x snap-mandatory no-scrollbar pb-8 px-4 md:px-0 items-stretch">
             
             <!-- 1. CARD PREZZO FISSO (Magenta) -->
@@ -110,21 +112,17 @@
 
                 <!-- Body Contenuto -->
                 <div class="p-6 pt-8 flex-grow flex flex-col bg-gradient-to-b from-pink-50/50 to-white">
-                    <!-- Descrizione -->
                     <div class="text-center mb-6">
                         <div class="text-vivi-magenta font-bold text-sm bg-pink-100/50 inline-block px-4 py-1.5 rounded-lg mb-4" id="fix-desc">
                             Prezzo bloccato per due anni
                         </div>
-                        
                         <div class="dashed-line opacity-30"></div>
-                        
                         <h4 class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">DEDICATA A CHI...</h4>
                         <p class="text-sm text-gray-600 leading-relaxed px-4">
                             Desidera stabilità nei costi per la propria casa con un <strong>prezzo fisso garantito per 24 mesi</strong>.
                         </p>
                     </div>
 
-                    <!-- Bonus Main -->
                     <div class="text-center mb-6">
                         <div class="flex items-center justify-center gap-2 text-vivi-teal-light font-bold text-lg">
                             <i class="fas fa-check-circle"></i>
@@ -133,19 +131,17 @@
                         <p class="text-xs text-gray-400 uppercase tracking-wide mt-1" id="fix-bonus-sub">attivando...</p>
                     </div>
 
-                    <!-- CTA -->
                     <div class="text-center mb-8">
-                        <button class="bg-vivi-magenta text-white font-bold py-3 px-10 rounded-full shadow-lg hover:bg-pink-700 transition-all transform hover:-translate-y-0.5 text-sm uppercase tracking-wide w-full md:w-auto">
+                        <button class="bg-vivi-magenta text-white font-bold py-3.5 px-10 rounded-full shadow-lg hover:bg-pink-700 transition-all transform hover:-translate-y-0.5 text-sm uppercase tracking-wide w-full md:w-auto">
                             Passa a VIVI energia
                         </button>
                     </div>
 
-                    <!-- White Boxes Container (Dynamic: 1 or 2 boxes) -->
-                    <div id="fix-boxes-container" class="space-y-4 mt-auto">
+                    <div id="fix-boxes-container" class="space-y-5 mt-auto">
                         <!-- Inseriti via JS -->
                     </div>
                     
-                    <div class="text-center mt-4">
+                    <div class="text-center mt-5">
                         <a href="#" class="text-xs text-gray-400 underline hover:text-vivi-magenta">Scopri il dettaglio dei costi</a>
                     </div>
                 </div>
@@ -161,21 +157,17 @@
 
                 <!-- Body Contenuto -->
                 <div class="p-6 pt-8 flex-grow flex flex-col bg-gradient-to-b from-orange-50/50 to-white">
-                    <!-- Descrizione -->
                     <div class="text-center mb-6">
                         <div class="text-vivi-orange font-bold text-sm bg-orange-100/50 inline-block px-4 py-1.5 rounded-lg mb-4" id="flex-desc">
                             Prezzo indicizzato, variabile mensilmente
                         </div>
-                        
                         <div class="dashed-line opacity-30"></div>
-                        
                         <h4 class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">DEDICATA A CHI...</h4>
                         <p class="text-sm text-gray-600 leading-relaxed px-4">
                             Desidera un'offerta che colga le <strong>opportunità di variazione dei prezzi nel mercato</strong>.
                         </p>
                     </div>
 
-                    <!-- Bonus Main -->
                     <div class="text-center mb-6">
                         <div class="flex items-center justify-center gap-2 text-vivi-teal-light font-bold text-lg">
                             <i class="fas fa-check-circle"></i>
@@ -184,19 +176,17 @@
                         <p class="text-xs text-gray-400 uppercase tracking-wide mt-1" id="flex-bonus-sub">attivando...</p>
                     </div>
 
-                    <!-- CTA -->
                     <div class="text-center mb-8">
-                        <button class="bg-vivi-orange text-white font-bold py-3 px-10 rounded-full shadow-lg hover:bg-orange-600 transition-all transform hover:-translate-y-0.5 text-sm uppercase tracking-wide w-full md:w-auto">
+                        <button class="bg-vivi-orange text-white font-bold py-3.5 px-10 rounded-full shadow-lg hover:bg-orange-600 transition-all transform hover:-translate-y-0.5 text-sm uppercase tracking-wide w-full md:w-auto">
                             Passa a VIVI energia
                         </button>
                     </div>
 
-                    <!-- White Boxes Container (Dynamic: 1 or 2 boxes) -->
-                    <div id="flex-boxes-container" class="space-y-4 mt-auto">
+                    <div id="flex-boxes-container" class="space-y-5 mt-auto">
                         <!-- Inseriti via JS -->
                     </div>
 
-                    <div class="text-center mt-4">
+                    <div class="text-center mt-5">
                         <a href="#" class="text-xs text-gray-400 underline hover:text-vivi-orange">Scopri il dettaglio dei costi</a>
                     </div>
                 </div>
@@ -204,7 +194,6 @@
 
         </div>
 
-        <!-- Mobile Pagination Dots -->
         <div class="flex md:hidden justify-center gap-2 mt-4">
             <div class="w-2 h-2 rounded-full bg-gray-400"></div>
             <div class="w-2 h-2 rounded-full bg-gray-200"></div>
@@ -212,24 +201,25 @@
 
     </div>
 
-    <!-- TEMPLATE BOX BIANCO (Inserito nella card) -->
+    <!-- TEMPLATE BOX BIANCO -->
     <template id="white-box-template">
-        <div class="bg-white rounded-xl shadow-inner-box p-5 relative border border-gray-100">
-            <!-- Badge Bonus (Top Right) -->
-            <div class="absolute -top-3 right-4 bg-gradient-to-r from-vivi-teal-light to-emerald-400 text-white px-3 py-1 rounded-bl-lg rounded-tr-lg text-xs font-bold shadow-sm flex flex-col items-center leading-tight">
+        <div class="bg-white rounded-2xl shadow-inner-box p-6 relative border border-gray-100">
+            <!-- Badge Bonus (Sfumatura Dinamica) -->
+            <div class="absolute -top-3 right-6 text-white px-4 py-1.5 rounded-bl-xl rounded-tr-xl text-xs font-bold shadow-md flex flex-col items-center leading-tight bonus-badge-container">
                 <span class="text-[9px] opacity-90 font-medium">BONUS fino a</span>
-                <span class="text-sm box-bonus-val">132€*</span>
+                <span class="text-base box-bonus-val">132€*</span>
             </div>
 
             <!-- Header: Icona + Titolo -->
-            <div class="flex items-center gap-3 mb-4">
-                <div class="w-10 h-10 rounded-full flex items-center justify-center text-white text-lg box-icon-bg shadow-sm">
-                    <i class="box-icon-class"></i>
+            <div class="flex items-center gap-4 mb-5">
+                <!-- ICONA INGRANDITA -->
+                <div class="w-16 h-16 rounded-full flex items-center justify-center text-white text-lg box-icon-bg shadow-md">
+                    <img src="" alt="Icon" class="box-icon-img w-10 h-10 object-contain brightness-0 invert">
                 </div>
                 <div>
                     <div class="flex items-center gap-2">
-                        <span class="font-bold text-gray-800 text-base box-title">Luce</span>
-                        <span class="hidden box-green-tag border border-green-500 text-green-600 text-[9px] font-bold px-1.5 rounded uppercase flex items-center gap-1">
+                        <span class="font-bold text-gray-800 text-lg box-title">Luce</span>
+                        <span class="hidden box-green-tag border border-green-500 text-green-600 text-[10px] font-bold px-2 py-0.5 rounded uppercase flex items-center gap-1">
                             <i class="fas fa-leaf"></i> 100% Green
                         </span>
                     </div>
@@ -237,7 +227,7 @@
             </div>
 
             <!-- Content: Fasce / Prezzi -->
-            <div class="box-price-content space-y-2">
+            <div class="box-price-content space-y-2.5">
                 <!-- Rows injected here -->
             </div>
 
@@ -250,14 +240,13 @@
                     <div class="text-xs font-bold text-gray-700">Quota fissa</div>
                     <div class="text-[9px] text-gray-400">IVA e imposte escluse</div>
                 </div>
-                <div class="text-sm font-bold text-gray-800 box-quota-val">10 €/mese</div>
+                <div class="text-lg font-bold text-gray-800 box-quota-val">10 €/mese</div>
             </div>
         </div>
     </template>
 
     <script>
         // --- CONFIGURAZIONE ---
-        // ID Offerte come da tabella utente
         const CONFIG = {
             dual: { 
                 fix: 46402, 
@@ -287,16 +276,27 @@
         function switchTab(tab) {
             currentTab = tab;
             
-            // Update UI Tabs
+            // Update UI Tabs - Applica gradiente al tab attivo
             ['dual', 'luce', 'gas'].forEach(t => {
                 const btn = document.getElementById(`tab-${t}`);
                 const img = btn.querySelector('img');
+                
+                // Rimuovi classi attive/gradienti
+                btn.className = "tab-btn tab-inactive px-6 py-3 rounded-full text-sm flex items-center gap-2";
+                img.classList.add('opacity-60');
+                img.classList.remove('brightness-0', 'invert');
+
                 if (t === tab) {
-                    btn.className = "tab-btn tab-active px-6 py-2.5 rounded-full text-sm flex items-center gap-2";
+                    btn.classList.remove('tab-inactive');
+                    btn.classList.add('tab-active');
+                    
+                    // Applica Sfumature Corrette ai Tab Attivi
+                    if(t === 'dual') btn.classList.add('bg-gradient-dual'); // Azzurro-Verde
+                    else if(t === 'luce') btn.classList.add('bg-gradient-luce'); // Magenta-Arancio
+                    else if(t === 'gas') btn.classList.add('bg-gradient-gas'); // Blu-Viola
+                    
                     img.classList.remove('opacity-60');
-                } else {
-                    btn.className = "tab-btn tab-inactive px-6 py-2.5 rounded-full text-sm flex items-center gap-2";
-                    img.classList.add('opacity-60');
+                    img.classList.add('brightness-0', 'invert'); // Icona bianca su gradiente
                 }
             });
 
@@ -326,7 +326,7 @@
 
                 loading.classList.add('hidden');
                 container.classList.remove('hidden');
-                container.scrollLeft = 0; // Reset scroll
+                container.scrollLeft = 0;
 
             } catch (e) {
                 console.error(e);
@@ -336,16 +336,13 @@
         }
 
         function renderCard(type, data) {
-            // 1. Dati Header Card
             const prefix = type;
             document.getElementById(`${prefix}-name`).textContent = data.nomeOfferta || `VIVIconsapevole ${type === 'fix' ? 'Fix' : 'Flex'}`;
             
-            // Descrizione
             if (data.testoDescrittivo && data.testoDescrittivo.length > 0) {
                 document.getElementById(`${prefix}-desc`).textContent = data.testoDescrittivo[0].value;
             }
 
-            // Bonus Totale Header
             let totalBonus = 0;
             if (data.totaleBonus) {
                 data.totaleBonus.forEach(b => {
@@ -353,14 +350,12 @@
                     if(!isNaN(v)) totalBonus += v;
                 });
             }
-            // Fallback calcolo Dual (se API non somma)
             if (currentTab === 'dual' && totalBonus < 150 && totalBonus > 0) totalBonus *= 2; 
-            if (totalBonus === 0) totalBonus = currentTab === 'dual' ? 264 : 132; // Fallback hardcoded per sicurezza visiva
+            if (totalBonus === 0) totalBonus = currentTab === 'dual' ? 264 : 132;
 
             document.getElementById(`${prefix}-main-bonus`).textContent = `BONUS FINO A ${totalBonus}€*`;
             document.getElementById(`${prefix}-bonus-sub`).textContent = `attivando ${CONFIG[currentTab].cond}`;
 
-            // 2. Generazione Box Bianchi
             const container = document.getElementById(`${prefix}-boxes-container`);
             container.innerHTML = '';
 
@@ -375,22 +370,29 @@
             const clone = template.content.cloneNode(true);
             const isLuce = svcType === 'luce';
 
-            // Configurazione Icone e Colori Box
+            // Elementi
             const iconBg = clone.querySelector('.box-icon-bg');
-            const iconClass = clone.querySelector('.box-icon-class');
+            const iconImg = clone.querySelector('.box-icon-img');
+            const bonusBadge = clone.querySelector('.bonus-badge-container');
             
             if (isLuce) {
-                iconBg.classList.add('bg-vivi-orange'); // Arancio per Luce
-                iconClass.classList.add('fas', 'fa-plug');
+                // Stile LUCE
+                iconBg.classList.add('bg-vivi-orange'); 
+                iconImg.src = "https://vivienergia.imgix.net/uploads/2026/02/11155507/Luce_4B.png";
                 clone.querySelector('.box-title').textContent = 'Luce';
                 clone.querySelector('.box-green-tag').classList.remove('hidden');
+                // Sfumatura Badge Bonus: Magenta -> Arancio
+                bonusBadge.classList.add('bg-gradient-luce');
             } else {
-                iconBg.classList.add('bg-vivi-teal-light'); // Teal per Gas
-                iconClass.classList.add('fas', 'fa-fire');
+                // Stile GAS
+                iconBg.classList.add('bg-vivi-teal-light');
+                iconImg.src = "https://vivienergia.imgix.net/uploads/2026/02/11155512/Gas_4.png";
                 clone.querySelector('.box-title').textContent = 'Gas';
+                // Sfumatura Badge Bonus: Blu -> Viola
+                bonusBadge.classList.add('bg-gradient-gas');
             }
 
-            // Bonus specifico del box (piccolo badge)
+            // Bonus specifico
             let boxBonus = "132€";
             if(data.totaleBonus) {
                 const b = data.totaleBonus.find(x => x.label && x.label.toLowerCase() === svcType);
@@ -398,113 +400,74 @@
             }
             clone.querySelector('.box-bonus-val').textContent = boxBonus + '*';
 
-            // --- CONTENUTO PREZZI (Fasce o Formula Flex) ---
+            // Contenuto Prezzi
             const contentDiv = clone.querySelector('.box-price-content');
-            
-            // Titolo sezione prezzi
             const priceTitle = document.createElement('div');
-            priceTitle.className = "text-xs font-bold text-gray-700 mb-2";
+            priceTitle.className = "text-xs font-bold text-gray-700 mb-3";
             priceTitle.textContent = offerType === 'fix' ? 
                 `Prezzo ${isLuce ? 'energia' : 'gas'} bloccato per due anni` : 
                 `Prezzo ${isLuce ? 'energia' : 'gas'}`;
             contentDiv.appendChild(priceTitle);
 
             if (offerType === 'fix') {
-                // --- FIX: Mostra Fasce F1, F2, F3 o Prezzo Gas ---
                 if (isLuce) {
-                    // LUCE FIX: Fasce
                     const fasce = data.energyBio || data.energy || [];
-                    // Se non ci sono fasce dall'API, fallback
                     if (fasce.length === 0) {
                         fasce.push({label: "Fascia 1", value: "0,1177 €/kWh"});
                         fasce.push({label: "Fascia 2", value: "0,1288 €/kWh"});
                         fasce.push({label: "Fascia 3", value: "0,1076 €/kWh"});
                     }
-
                     fasce.forEach(f => {
                         const row = document.createElement('div');
                         row.className = "flex justify-between items-center text-sm";
-                        row.innerHTML = `
-                            <span class="text-gray-500">${f.label}</span>
-                            <span class="font-bold text-gray-800">${f.value}</span>
-                        `;
+                        row.innerHTML = `<span class="text-gray-500">${f.label}</span><span class="font-bold text-gray-800">${f.value}</span>`;
                         contentDiv.appendChild(row);
                     });
                 } else {
-                    // GAS FIX: Riga Unica
                     let val = "0,3830 €/Smc";
                     if(data.gas && data.gas.length > 0) val = data.gas[0].value;
-                    
                     const row = document.createElement('div');
                     row.className = "flex justify-between items-center text-sm";
-                    row.innerHTML = `
-                        <span class="text-gray-500">Materia prima</span>
-                        <span class="font-bold text-gray-800 text-lg">${val}</span>
-                    `;
+                    row.innerHTML = `<span class="text-gray-500">Materia prima</span><span class="font-bold text-gray-800 text-lg">${val}</span>`;
                     contentDiv.appendChild(row);
                 }
-
             } else {
-                // --- FLEX: Mostra Formula con Quota Variabile ---
-                // Esempio: PUN + 0,0145 €/kWh
                 const indexName = isLuce ? 'PUN' : 'PSV';
-                
-                // Ricerca Quota Variabile (Spread)
-                let spread = isLuce ? "0,0145 €/kWh" : "0,095 €/Smc"; // Fallback
-                
-                // Cerca nell'API
+                let spread = isLuce ? "0,0145 €/kWh" : "0,095 €/Smc";
                 const searchArr = isLuce ? 
                     [data.energyBioCommercialization, data.energyCommercialization, data.energyBio] :
                     [data.gasCommercialization, data.gas];
                 
-                // Helper ricerca profonda
                 const findSpread = () => {
                     for(const arr of searchArr) {
                         if(!arr) continue;
-                        // Cerca esplicitamente "Quota Variabile" o un valore che sembra uno spread piccolo
-                        const item = arr.find(x => x.label && (
-                            x.label.toLowerCase().includes('quota variabile') || 
-                            x.label.toLowerCase().includes('spread')
-                        ));
+                        const item = arr.find(x => x.label && (x.label.toLowerCase().includes('quota variabile') || x.label.toLowerCase().includes('spread')));
                         if(item) return item.value;
                     }
                     return null;
                 };
-                
                 const foundSpread = findSpread();
                 if(foundSpread) spread = foundSpread;
 
-                // Layout Formula come immagine immagine_b4e198.png
-                // Fasce vuote per luce flex? L'immagine mostra F1, F2, F3 con la formula su F2
                 if (isLuce) {
                     ['Fascia 1', 'Fascia 2', 'Fascia 3'].forEach((f, idx) => {
                         const row = document.createElement('div');
                         row.className = "flex justify-between items-center text-sm min-h-[24px]";
-                        
                         if (idx === 1) {
-                            // Formula su Fascia 2 (come da immagine)
-                            row.innerHTML = `
-                                <span class="text-gray-500">${f}</span>
-                                <span class="font-bold text-gray-800 text-base">${indexName} + ${spread}</span>
-                            `;
+                            row.innerHTML = `<span class="text-gray-500">${f}</span><span class="font-bold text-gray-800 text-base">${indexName} + ${spread}</span>`;
                         } else {
                             row.innerHTML = `<span class="text-gray-500">${f}</span>`;
                         }
                         contentDiv.appendChild(row);
                     });
                 } else {
-                    // Gas Flex
                     const row = document.createElement('div');
                     row.className = "flex justify-between items-center text-sm";
-                    row.innerHTML = `
-                        <span class="text-gray-500">Prezzo gas</span>
-                        <span class="font-bold text-gray-800 text-lg">${indexName} + ${spread}</span>
-                    `;
+                    row.innerHTML = `<span class="text-gray-500">Prezzo gas</span><span class="font-bold text-gray-800 text-lg">${indexName} + ${spread}</span>`;
                     contentDiv.appendChild(row);
                 }
             }
 
-            // Quota Fissa
             const commArr = isLuce ? (data.energyBioCommercialization || data.energyCommercialization) : data.gasCommercialization;
             let quota = "10 €/mese";
             if(commArr) {
@@ -516,7 +479,6 @@
             return clone;
         }
 
-        // Init
         document.addEventListener('DOMContentLoaded', () => {
             switchTab('dual');
         });
