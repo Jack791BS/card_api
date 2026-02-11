@@ -16,8 +16,8 @@
             theme: {
                 extend: {
                     colors: {
-                        'vivi-magenta': '#E81C69', // Colore Fix
-                        'vivi-orange': '#F09724',  // Colore Flex
+                        'vivi-magenta': '#E81C69',
+                        'vivi-orange': '#F09724',
                         'vivi-blue': '#077BBE',
                         'vivi-green': '#6EC18A',
                         'vivi-teal-dark': '#0085bd',
@@ -33,10 +33,9 @@
                         'inner-box': '0 4px 15px rgba(0,0,0,0.05)'
                     },
                     backgroundImage: {
-                        // Sfumature da Brandbook (image_b62814.png)
-                        'gradient-luce': 'linear-gradient(90deg, #E81C69 0%, #F09724 100%)', // Magenta -> Arancio
-                        'gradient-gas': 'linear-gradient(90deg, #077BBE 0%, #7E2889 100%)',  // Blu -> Viola
-                        'gradient-dual': 'linear-gradient(90deg, #3AA3DA 0%, #6EC18A 100%)'  // Azzurro -> Verde
+                        'gradient-luce': 'linear-gradient(90deg, #E81C69 0%, #F09724 100%)',
+                        'gradient-gas': 'linear-gradient(90deg, #077BBE 0%, #7E2889 100%)',
+                        'gradient-dual': 'linear-gradient(90deg, #3AA3DA 0%, #6EC18A 100%)'
                     }
                 }
             }
@@ -45,37 +44,41 @@
     <style>
         body { background-color: #f5f5f7; font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
         
-        /* Gestione Scrollbar Nascosta per slider mobile */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* Tabs Style */
         .tab-btn { transition: all 0.3s ease; }
-        /* Il background del tab attivo viene gestito via JS per applicare il gradiente corretto */
         .tab-active { color: white; box-shadow: 0 4px 12px rgba(0,0,0,0.15); font-weight: 700; transform: scale(1.02); border: none; }
         .tab-inactive { color: #666; font-weight: 500; opacity: 0.8; background-color: transparent; }
         .tab-inactive:hover { opacity: 1; background-color: rgba(255,255,255,0.5); }
 
-        /* Animazioni Card */
-        .offer-card { transition: transform 0.3s ease; }
+        .offer-card { transition: transform 0.3s ease, opacity 0.3s ease; }
         .offer-card:hover { transform: translateY(-5px); }
 
         .dashed-line { border-top: 1px dashed #cbd5e1; margin: 15px 0; }
+        .snap-start-padding { scroll-padding-left: 1rem; }
+
+        /* Custom Select Style */
+        .custom-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 0.5rem center;
+            background-size: 1em;
+        }
     </style>
 </head>
 <body class="p-4 md:p-10 flex flex-col items-center min-h-screen">
 
     <div class="w-full max-w-7xl mx-auto">
         
-        <!-- Header / Tabs -->
-        <div class="flex justify-center mb-10 relative z-10">
+        <!-- Header Container: Tabs + Filtro -->
+        <div class="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 mb-6 relative z-10">
+            
+            <!-- Main Tabs -->
             <div class="bg-gray-200/60 p-1.5 rounded-full flex gap-1 backdrop-blur-md shadow-inner items-center">
-                
-                <!-- Tab Luce e Gas con Badge Centrato -->
                 <div class="relative">
-                    <!-- Badge posizionato assolutamente rispetto a questo wrapper -->
                     <span class="absolute -top-5 left-1/2 transform -translate-x-1/2 bg-vivi-orange text-white text-[9px] font-bold px-2 py-0.5 rounded shadow-sm uppercase whitespace-nowrap z-20">La più conveniente</span>
-                    
                     <button onclick="switchTab('dual')" id="tab-dual" class="tab-btn tab-active bg-gradient-dual px-6 py-3 rounded-full text-sm flex items-center gap-2">
                         <img src="https://vivienergia.imgix.net/uploads/2026/02/11155509/Dual_4.png" class="w-6 h-6 object-contain brightness-0 invert" alt="Dual">
                         <span>Luce e Gas</span>
@@ -91,6 +94,16 @@
                     <span>Gas</span>
                 </button>
             </div>
+
+            <!-- Filtro Secondario (Discreto Dropdown) -->
+            <div class="relative group">
+                <select id="filter-select" onchange="applyFilter(this.value)" class="custom-select appearance-none bg-white/50 hover:bg-white border border-transparent hover:border-gray-200 text-gray-600 font-medium text-sm rounded-full py-2 pl-4 pr-8 shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-vivi-teal-light cursor-pointer">
+                    <option value="all">Mostra tutte le offerte</option>
+                    <option value="fix">Solo Prezzo Fisso</option>
+                    <option value="flex">Solo Prezzo Variabile</option>
+                </select>
+            </div>
+
         </div>
 
         <!-- Loading / Error -->
@@ -103,17 +116,15 @@
         </div>
 
         <!-- Cards Container -->
-        <div id="cards-container" class="hidden w-full flex flex-row md:grid md:grid-cols-2 gap-6 md:gap-10 overflow-x-auto md:overflow-visible snap-x snap-mandatory no-scrollbar pb-8 px-4 md:px-0 items-stretch">
+        <div id="cards-container" class="hidden w-full flex flex-row md:grid md:grid-cols-2 gap-4 md:gap-10 overflow-x-auto md:overflow-visible snap-x snap-mandatory snap-start-padding no-scrollbar pb-8 px-4 md:px-0 items-stretch transition-all duration-300">
             
             <!-- 1. CARD PREZZO FISSO (Magenta) -->
-            <div class="min-w-[90vw] md:min-w-0 snap-center offer-card bg-white rounded-3xl shadow-card overflow-hidden border-2 border-transparent hover:border-vivi-magenta flex flex-col">
-                <!-- Header Colorato -->
+            <div id="card-fix" class="min-w-[85vw] md:min-w-0 snap-center offer-card bg-white rounded-3xl shadow-card overflow-hidden border-2 border-transparent hover:border-vivi-magenta flex flex-col transition-all duration-300">
                 <div class="bg-vivi-magenta p-6 text-center text-white relative">
                     <div class="text-sm font-medium opacity-90 mb-1" id="fix-name">VIVIconsapevole Fix</div>
                     <h2 class="text-3xl font-extrabold uppercase tracking-tight">PREZZO FISSO</h2>
                 </div>
 
-                <!-- Body Contenuto -->
                 <div class="p-6 pt-8 flex-grow flex flex-col bg-gradient-to-b from-pink-50/50 to-white">
                     <div class="text-center mb-6">
                         <div class="text-vivi-magenta font-bold text-sm bg-pink-100/50 inline-block px-4 py-1.5 rounded-lg mb-4" id="fix-desc">
@@ -151,14 +162,12 @@
             </div>
 
             <!-- 2. CARD PREZZO VARIABILE (Arancio) -->
-            <div class="min-w-[90vw] md:min-w-0 snap-center offer-card bg-white rounded-3xl shadow-card overflow-hidden border-2 border-transparent hover:border-vivi-orange flex flex-col">
-                <!-- Header Colorato -->
+            <div id="card-flex" class="min-w-[85vw] md:min-w-0 snap-center offer-card bg-white rounded-3xl shadow-card overflow-hidden border-2 border-transparent hover:border-vivi-orange flex flex-col transition-all duration-300">
                 <div class="bg-vivi-orange p-6 text-center text-white relative">
                     <div class="text-sm font-medium opacity-90 mb-1" id="flex-name">VIVIconsapevole Flex</div>
                     <h2 class="text-3xl font-extrabold uppercase tracking-tight">PREZZO VARIABILE</h2>
                 </div>
 
-                <!-- Body Contenuto -->
                 <div class="p-6 pt-8 flex-grow flex flex-col bg-gradient-to-b from-orange-50/50 to-white">
                     <div class="text-center mb-6">
                         <div class="text-vivi-orange font-bold text-sm bg-orange-100/50 inline-block px-4 py-1.5 rounded-lg mb-4" id="flex-desc">
@@ -197,9 +206,9 @@
 
         </div>
 
-        <div class="flex md:hidden justify-center gap-2 mt-4">
-            <div class="w-2 h-2 rounded-full bg-gray-400"></div>
-            <div class="w-2 h-2 rounded-full bg-gray-200"></div>
+        <div class="flex md:hidden justify-center gap-2 mt-4" id="mobile-dots">
+            <div class="w-2 h-2 rounded-full bg-gray-400 dot-indicator" data-target="fix"></div>
+            <div class="w-2 h-2 rounded-full bg-gray-200 dot-indicator" data-target="flex"></div>
         </div>
 
     </div>
@@ -207,7 +216,7 @@
     <!-- TEMPLATE BOX BIANCO -->
     <template id="white-box-template">
         <div class="bg-white rounded-2xl shadow-inner-box p-6 relative border border-gray-100">
-            <!-- Badge Bonus (Sfumatura Dinamica) -->
+            <!-- Badge Bonus -->
             <div class="absolute -top-3 right-6 text-white px-4 py-1.5 rounded-bl-xl rounded-tr-xl text-xs font-bold shadow-md flex flex-col items-center leading-tight bonus-badge-container">
                 <span class="text-[9px] opacity-90 font-medium">BONUS fino a</span>
                 <span class="text-base box-bonus-val">132€*</span>
@@ -215,10 +224,10 @@
 
             <!-- Header: Icona + Titolo -->
             <div class="flex items-center gap-4 mb-5">
-                <!-- ICONA E SFONDO INGRANDITI -->
-                <!-- Applicazione gradiente tramite JS -->
-                <div class="w-20 h-20 rounded-full flex items-center justify-center text-white text-lg box-icon-bg shadow-md">
-                    <img src="" alt="Icon" class="box-icon-img w-12 h-12 object-contain brightness-0 invert">
+                <!-- ICONA GRANDE, BOLLINO PICCOLO (w-16 h-16) -->
+                <div class="w-16 h-16 rounded-full flex items-center justify-center text-white text-lg box-icon-bg shadow-md p-0.5">
+                    <!-- Icona ingrandita al massimo (w-full) -->
+                    <img src="" alt="Icon" class="box-icon-img w-11 h-11 object-contain brightness-0 invert">
                 </div>
                 <div>
                     <div class="flex items-center gap-2">
@@ -252,40 +261,25 @@
     <script>
         // --- CONFIGURAZIONE ---
         const CONFIG = {
-            dual: { 
-                fix: 46402, 
-                flex: 46404, 
-                label: 'Luce e Gas', 
-                cond: 'luce e gas' 
-            },
-            luce: { 
-                fix: 46401, 
-                flex: 46406, 
-                label: 'Luce', 
-                cond: 'luce' 
-            },
-            gas:  { 
-                fix: 46403, 
-                flex: 46405, 
-                label: 'Gas', 
-                cond: 'gas' 
-            }
+            dual: { fix: 46402, flex: 46404, label: 'Luce e Gas', cond: 'luce e gas' },
+            luce: { fix: 46401, flex: 46406, label: 'Luce', cond: 'luce' },
+            gas:  { fix: 46403, flex: 46405, label: 'Gas', cond: 'gas' }
         };
 
         const API_BASE = "https://backend-funnel.vivienergia.it/api/wordpress/offer?id=";
         let currentTab = 'dual';
+        let currentFilter = 'all';
 
         // --- CORE LOGIC ---
 
         function switchTab(tab) {
             currentTab = tab;
             
-            // Update UI Tabs - Applica gradiente al tab attivo
+            // UI Update Tabs
             ['dual', 'luce', 'gas'].forEach(t => {
                 const btn = document.getElementById(`tab-${t}`);
                 const img = btn.querySelector('img');
                 
-                // Reset stati
                 btn.className = "tab-btn tab-inactive px-6 py-3 rounded-full text-sm flex items-center gap-2";
                 img.classList.add('opacity-60');
                 img.classList.remove('brightness-0', 'invert');
@@ -294,17 +288,42 @@
                     btn.classList.remove('tab-inactive');
                     btn.classList.add('tab-active');
                     
-                    // Applica Sfumature Corrette ai Tab Attivi
-                    if(t === 'dual') btn.classList.add('bg-gradient-dual'); // Azzurro-Verde
-                    else if(t === 'luce') btn.classList.add('bg-gradient-luce'); // Magenta-Arancio
-                    else if(t === 'gas') btn.classList.add('bg-gradient-gas'); // Blu-Viola
+                    if(t === 'dual') btn.classList.add('bg-gradient-dual');
+                    else if(t === 'luce') btn.classList.add('bg-gradient-luce');
+                    else if(t === 'gas') btn.classList.add('bg-gradient-gas');
                     
                     img.classList.remove('opacity-60');
-                    img.classList.add('brightness-0', 'invert'); // Icona bianca su gradiente
+                    img.classList.add('brightness-0', 'invert');
                 }
             });
 
             fetchData();
+        }
+
+        // --- FILTER LOGIC ---
+        function applyFilter(filterType) {
+            currentFilter = filterType;
+            const container = document.getElementById('cards-container');
+            const cardFix = document.getElementById('card-fix');
+            const cardFlex = document.getElementById('card-flex');
+
+            if (filterType === 'all') {
+                cardFix.classList.remove('hidden');
+                cardFlex.classList.remove('hidden');
+                container.classList.add('md:grid', 'md:grid-cols-2');
+                container.classList.remove('justify-center');
+            } else {
+                container.classList.remove('md:grid', 'md:grid-cols-2');
+                container.classList.add('flex', 'justify-center');
+
+                if (filterType === 'fix') {
+                    cardFix.classList.remove('hidden');
+                    cardFlex.classList.add('hidden');
+                } else {
+                    cardFix.classList.add('hidden');
+                    cardFlex.classList.remove('hidden');
+                }
+            }
         }
 
         async function fetchData() {
@@ -330,6 +349,8 @@
 
                 loading.classList.add('hidden');
                 container.classList.remove('hidden');
+                
+                applyFilter(currentFilter);
                 container.scrollLeft = 0;
 
             } catch (e) {
@@ -374,31 +395,23 @@
             const clone = template.content.cloneNode(true);
             const isLuce = svcType === 'luce';
 
-            // Elementi
             const iconBg = clone.querySelector('.box-icon-bg');
             const iconImg = clone.querySelector('.box-icon-img');
             const bonusBadge = clone.querySelector('.bonus-badge-container');
             
             if (isLuce) {
-                // Stile LUCE
-                // Sfumatura SFONDO Icona: Magenta -> Arancio
                 iconBg.classList.add('bg-gradient-luce'); 
                 iconImg.src = "https://vivienergia.imgix.net/uploads/2026/02/11155507/Luce_4B.png";
                 clone.querySelector('.box-title').textContent = 'Luce';
                 clone.querySelector('.box-green-tag').classList.remove('hidden');
-                // Sfumatura Badge Bonus: Magenta -> Arancio
                 bonusBadge.classList.add('bg-gradient-luce');
             } else {
-                // Stile GAS
-                // Sfumatura SFONDO Icona: Blu -> Viola
                 iconBg.classList.add('bg-gradient-gas');
                 iconImg.src = "https://vivienergia.imgix.net/uploads/2026/02/11155512/Gas_4.png";
                 clone.querySelector('.box-title').textContent = 'Gas';
-                // Sfumatura Badge Bonus: Blu -> Viola
                 bonusBadge.classList.add('bg-gradient-gas');
             }
 
-            // Bonus specifico
             let boxBonus = "132€";
             if(data.totaleBonus) {
                 const b = data.totaleBonus.find(x => x.label && x.label.toLowerCase() === svcType);
@@ -406,7 +419,6 @@
             }
             clone.querySelector('.box-bonus-val').textContent = boxBonus + '*';
 
-            // Contenuto Prezzi
             const contentDiv = clone.querySelector('.box-price-content');
             const priceTitle = document.createElement('div');
             priceTitle.className = "text-xs font-bold text-gray-700 mb-3";
