@@ -150,10 +150,11 @@
                         <p class="text-[10px] md:text-xs text-gray-400 uppercase tracking-wide mt-1" id="fix-bonus-sub">attivando...</p>
                     </div>
 
+                    <!-- CTA FIX -->
                     <div class="text-center mb-6 md:mb-8">
-                        <button class="bg-vivi-magenta text-white font-bold py-3 px-8 md:py-3.5 md:px-10 rounded-full shadow-lg hover:bg-pink-700 transition-all transform hover:-translate-y-0.5 text-xs md:text-sm uppercase tracking-wide w-full md:w-auto">
+                        <a id="cta-fix" href="#" class="inline-block bg-vivi-magenta text-white font-bold py-3 px-8 md:py-3.5 md:px-10 rounded-full shadow-lg hover:bg-pink-700 transition-all transform hover:-translate-y-0.5 text-xs md:text-sm uppercase tracking-wide w-full md:w-auto text-center">
                             Passa a VIVI energia
-                        </button>
+                        </a>
                     </div>
 
                     <div id="fix-boxes-container" class="space-y-3 md:space-y-5 mt-auto">
@@ -193,10 +194,11 @@
                         <p class="text-[10px] md:text-xs text-gray-400 uppercase tracking-wide mt-1" id="flex-bonus-sub">attivando...</p>
                     </div>
 
+                    <!-- CTA FLEX -->
                     <div class="text-center mb-6 md:mb-8">
-                        <button class="bg-vivi-orange text-white font-bold py-3 px-8 md:py-3.5 md:px-10 rounded-full shadow-lg hover:bg-orange-600 transition-all transform hover:-translate-y-0.5 text-xs md:text-sm uppercase tracking-wide w-full md:w-auto">
+                        <a id="cta-flex" href="#" class="inline-block bg-vivi-orange text-white font-bold py-3 px-8 md:py-3.5 md:px-10 rounded-full shadow-lg hover:bg-orange-600 transition-all transform hover:-translate-y-0.5 text-xs md:text-sm uppercase tracking-wide w-full md:w-auto text-center">
                             Passa a VIVI energia
-                        </button>
+                        </a>
                     </div>
 
                     <div id="flex-boxes-container" class="space-y-3 md:space-y-5 mt-auto">
@@ -279,7 +281,7 @@
         function switchTab(tab) {
             currentTab = tab;
             
-            // UI Update Tabs
+            // Aggiorna UI Tabs
             ['dual', 'luce', 'gas'].forEach(t => {
                 const btn = document.getElementById(`tab-${t}`);
                 const img = btn.querySelector('img');
@@ -303,7 +305,31 @@
                 }
             });
 
+            // Aggiorna Links CTA
+            updateCtaLinks();
+
             fetchData();
+        }
+
+        // --- LINK AGGIORNAMENTO CTA ---
+        function updateCtaLinks() {
+            const utilityMap = {
+                'dual': 'Lucegas',
+                'luce': 'Luce',
+                'gas': 'Gas'
+            };
+            const utility = utilityMap[currentTab];
+            
+            // Base URL comune
+            const urlTemplate = `https://www.vivienergia.it/configurator?business=Privato&utility=${utility}&price={PRICE}&referrer=configuratore-lp-due-vivic-vb`;
+            
+            // Imposta href per bottone Fix
+            const ctaFix = document.getElementById('cta-fix');
+            if(ctaFix) ctaFix.href = urlTemplate.replace('{PRICE}', 'fix');
+            
+            // Imposta href per bottone Flex
+            const ctaFlex = document.getElementById('cta-flex');
+            if(ctaFlex) ctaFlex.href = urlTemplate.replace('{PRICE}', 'flex');
         }
 
         // --- FILTER LOGIC ---
