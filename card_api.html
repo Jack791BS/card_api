@@ -56,7 +56,10 @@
         .offer-card { transition: transform 0.3s ease, opacity 0.3s ease; }
         .offer-card:hover { transform: translateY(-5px); }
 
-        .dashed-line { border-top: 1px dashed #cbd5e1; margin: 15px 0; }
+        .dashed-line { border-top: 1px dashed #cbd5e1; margin: 12px 0; }
+        @media (min-width: 768px) {
+            .dashed-line { margin: 15px 0; }
+        }
         .snap-start-padding { scroll-padding-left: 1rem; }
 
         /* Custom Select Style */
@@ -69,38 +72,37 @@
         }
     </style>
 </head>
-<body class="p-4 md:p-10 flex flex-col items-center min-h-screen">
+<body class="p-2 md:p-10 flex flex-col items-center min-h-screen">
 
     <div class="w-full max-w-7xl mx-auto">
         
         <!-- Header Container: Tabs + Filtro -->
-        <div class="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 mb-6 relative z-10">
+        <div class="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 mb-4 md:mb-6 relative z-10">
             
             <!-- Main Tabs -->
-            <div class="bg-gray-200/60 p-1.5 rounded-full flex gap-1 backdrop-blur-md shadow-inner items-center">
+            <div class="bg-gray-200/60 p-1 md:p-1.5 rounded-full flex gap-1 backdrop-blur-md shadow-inner items-center scale-90 md:scale-100 origin-center">
                 <div class="relative">
-                    <span class="absolute -top-5 left-1/2 transform -translate-x-1/2 bg-vivi-orange text-white text-[9px] font-bold px-2 py-0.5 rounded shadow-sm uppercase whitespace-nowrap z-20">La più conveniente</span>
-                    <!-- ICONA INGRANDITA: w-10 h-10 -->
-                    <button onclick="switchTab('dual')" id="tab-dual" class="tab-btn tab-active bg-gradient-dual px-6 py-3 rounded-full text-sm flex items-center gap-2">
-                        <img src="https://storage.googleapis.com/instapage-user-media/c4efe85c/65046328-0-icone-lucegas-bianco.png" class="w-10 h-10 object-contain" alt="Dual">
+                    <span class="absolute -top-4 md:-top-5 left-1/2 transform -translate-x-1/2 bg-vivi-orange text-white text-[8px] md:text-[9px] font-bold px-2 py-0.5 rounded shadow-sm uppercase whitespace-nowrap z-20">La più conveniente</span>
+                    <!-- ICONA: w-8 h-8 su mobile, w-10 h-10 su desktop -->
+                    <button onclick="switchTab('dual')" id="tab-dual" class="tab-btn tab-active bg-gradient-dual px-4 py-2 md:px-6 md:py-3 rounded-full text-xs md:text-sm flex items-center gap-2">
+                        <img src="https://storage.googleapis.com/instapage-user-media/c4efe85c/65046328-0-icone-lucegas-bianco.png" class="w-8 h-8 md:w-10 md:h-10 object-contain" alt="Dual">
                         <span>Luce e Gas</span>
                     </button>
                 </div>
 
-                <!-- ICONE INGRANDITE: w-10 h-10 -->
-                <button onclick="switchTab('luce')" id="tab-luce" class="tab-btn tab-inactive px-6 py-3 rounded-full text-sm flex items-center gap-2">
-                    <img src="https://storage.googleapis.com/instapage-user-media/c4efe85c/65046326-0-icone-luce-bianco.png" class="w-10 h-10 object-contain opacity-60 brightness-0" alt="Luce">
+                <button onclick="switchTab('luce')" id="tab-luce" class="tab-btn tab-inactive px-4 py-2 md:px-6 md:py-3 rounded-full text-xs md:text-sm flex items-center gap-2">
+                    <img src="https://storage.googleapis.com/instapage-user-media/c4efe85c/65046326-0-icone-luce-bianco.png" class="w-8 h-8 md:w-10 md:h-10 object-contain opacity-60 brightness-0" alt="Luce">
                     <span>Luce</span>
                 </button>
-                <button onclick="switchTab('gas')" id="tab-gas" class="tab-btn tab-inactive px-6 py-3 rounded-full text-sm flex items-center gap-2">
-                    <img src="https://storage.googleapis.com/instapage-user-media/c4efe85c/65046324-0-icone-gas-bianco.png" class="w-10 h-10 object-contain opacity-60 brightness-0" alt="Gas">
+                <button onclick="switchTab('gas')" id="tab-gas" class="tab-btn tab-inactive px-4 py-2 md:px-6 md:py-3 rounded-full text-xs md:text-sm flex items-center gap-2">
+                    <img src="https://storage.googleapis.com/instapage-user-media/c4efe85c/65046324-0-icone-gas-bianco.png" class="w-8 h-8 md:w-10 md:h-10 object-contain opacity-60 brightness-0" alt="Gas">
                     <span>Gas</span>
                 </button>
             </div>
 
             <!-- Filtro Secondario (Discreto Dropdown) -->
             <div class="relative group">
-                <select id="filter-select" onchange="applyFilter(this.value)" class="custom-select appearance-none bg-white/50 hover:bg-white border border-transparent hover:border-gray-200 text-gray-600 font-medium text-sm rounded-full py-2 pl-4 pr-8 shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-vivi-teal-light cursor-pointer">
+                <select id="filter-select" onchange="applyFilter(this.value)" class="custom-select appearance-none bg-white/50 hover:bg-white border border-transparent hover:border-gray-200 text-gray-600 font-medium text-xs md:text-sm rounded-full py-1.5 pl-3 pr-7 md:py-2 md:pl-4 md:pr-8 shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-vivi-teal-light cursor-pointer">
                     <option value="all">Mostra tutte le offerte</option>
                     <option value="fix">Solo Prezzo Fisso</option>
                     <option value="flex">Solo Prezzo Variabile</option>
@@ -110,99 +112,99 @@
         </div>
 
         <!-- Loading / Error -->
-        <div id="loading-ui" class="flex flex-col items-center py-20">
-            <div class="w-10 h-10 border-4 border-gray-200 border-t-vivi-magenta rounded-full animate-spin mb-4"></div>
-            <span class="text-gray-500 font-medium text-sm">Caricamento offerte...</span>
+        <div id="loading-ui" class="flex flex-col items-center py-10 md:py-20">
+            <div class="w-8 h-8 md:w-10 md:h-10 border-4 border-gray-200 border-t-vivi-magenta rounded-full animate-spin mb-4"></div>
+            <span class="text-gray-500 font-medium text-xs md:text-sm">Caricamento offerte...</span>
         </div>
         <div id="error-ui" class="hidden w-full max-w-lg mx-auto bg-white border border-red-200 rounded-xl p-4 text-center text-red-600 mb-8">
             <i class="fas fa-exclamation-circle mr-2"></i> Impossibile caricare i dati.
         </div>
 
         <!-- Cards Container -->
-        <div id="cards-container" class="hidden w-full flex flex-row md:grid md:grid-cols-2 gap-4 md:gap-10 overflow-x-auto md:overflow-visible snap-x snap-mandatory snap-start-padding no-scrollbar pb-8 px-4 md:px-0 items-stretch transition-all duration-300">
+        <div id="cards-container" class="hidden w-full flex flex-row md:grid md:grid-cols-2 gap-3 md:gap-10 overflow-x-auto md:overflow-visible snap-x snap-mandatory snap-start-padding no-scrollbar pb-6 md:pb-8 px-2 md:px-0 items-stretch transition-all duration-300">
             
             <!-- 1. CARD PREZZO FISSO (Magenta) -->
-            <div id="card-fix" class="min-w-[85vw] md:min-w-0 snap-center offer-card bg-white rounded-3xl shadow-card overflow-hidden border-2 border-transparent hover:border-vivi-magenta flex flex-col transition-all duration-300">
-                <div class="bg-vivi-magenta p-6 text-center text-white relative">
-                    <div class="text-sm font-medium opacity-90 mb-1" id="fix-name">VIVIconsapevole Fix</div>
-                    <h2 class="text-3xl font-extrabold uppercase tracking-tight">PREZZO FISSO</h2>
+            <div id="card-fix" class="min-w-[85vw] md:min-w-0 snap-center offer-card bg-white rounded-2xl md:rounded-3xl shadow-card overflow-hidden border-2 border-transparent hover:border-vivi-magenta flex flex-col transition-all duration-300">
+                <div class="bg-vivi-magenta p-4 md:p-6 text-center text-white relative">
+                    <div class="text-xs md:text-sm font-medium opacity-90 mb-1" id="fix-name">VIVIconsapevole Fix</div>
+                    <h2 class="text-2xl md:text-3xl font-extrabold uppercase tracking-tight">PREZZO FISSO</h2>
                 </div>
 
-                <div class="p-6 pt-8 flex-grow flex flex-col bg-gradient-to-b from-pink-50/50 to-white">
-                    <div class="text-center mb-6">
-                        <div class="text-vivi-magenta font-bold text-sm bg-pink-100/50 inline-block px-4 py-1.5 rounded-lg mb-4" id="fix-desc">
+                <div class="p-4 md:p-8 flex-grow flex flex-col bg-gradient-to-b from-pink-50/50 to-white">
+                    <div class="text-center mb-4 md:mb-6">
+                        <div class="text-vivi-magenta font-bold text-xs md:text-sm bg-pink-100/50 inline-block px-3 py-1 md:px-4 md:py-1.5 rounded-lg mb-3 md:mb-4" id="fix-desc">
                             Prezzo bloccato per due anni
                         </div>
                         <div class="dashed-line opacity-30"></div>
-                        <h4 class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">DEDICATA A CHI...</h4>
-                        <p class="text-sm text-gray-600 leading-relaxed px-4">
+                        <h4 class="text-[10px] md:text-xs font-bold text-gray-500 uppercase tracking-widest mb-1 md:mb-2">DEDICATA A CHI...</h4>
+                        <p class="text-xs md:text-sm text-gray-600 leading-relaxed px-2 md:px-4">
                             Desidera stabilità nei costi per la propria casa con un <strong>prezzo fisso garantito per 24 mesi</strong>.
                         </p>
                     </div>
 
-                    <div class="text-center mb-6">
-                        <div class="flex items-center justify-center gap-2 text-vivi-teal-light font-bold text-lg">
+                    <div class="text-center mb-4 md:mb-6">
+                        <div class="flex items-center justify-center gap-2 text-vivi-teal-light font-bold text-base md:text-lg">
                             <i class="fas fa-check-circle"></i>
                             <span id="fix-main-bonus">BONUS FINO A ---€*</span>
                         </div>
-                        <p class="text-xs text-gray-400 uppercase tracking-wide mt-1" id="fix-bonus-sub">attivando...</p>
+                        <p class="text-[10px] md:text-xs text-gray-400 uppercase tracking-wide mt-1" id="fix-bonus-sub">attivando...</p>
                     </div>
 
-                    <div class="text-center mb-8">
-                        <button class="bg-vivi-magenta text-white font-bold py-3.5 px-10 rounded-full shadow-lg hover:bg-pink-700 transition-all transform hover:-translate-y-0.5 text-sm uppercase tracking-wide w-full md:w-auto">
+                    <div class="text-center mb-6 md:mb-8">
+                        <button class="bg-vivi-magenta text-white font-bold py-3 px-8 md:py-3.5 md:px-10 rounded-full shadow-lg hover:bg-pink-700 transition-all transform hover:-translate-y-0.5 text-xs md:text-sm uppercase tracking-wide w-full md:w-auto">
                             Passa a VIVI energia
                         </button>
                     </div>
 
-                    <div id="fix-boxes-container" class="space-y-5 mt-auto">
+                    <div id="fix-boxes-container" class="space-y-3 md:space-y-5 mt-auto">
                         <!-- Inseriti via JS -->
                     </div>
                     
-                    <div class="text-center mt-5">
-                        <a href="#" class="text-xs text-gray-400 underline hover:text-vivi-magenta">Scopri il dettaglio dei costi</a>
+                    <div class="text-center mt-4 md:mt-5">
+                        <a href="#" class="text-[10px] md:text-xs text-gray-400 underline hover:text-vivi-magenta">Scopri il dettaglio dei costi</a>
                     </div>
                 </div>
             </div>
 
             <!-- 2. CARD PREZZO VARIABILE (Arancio) -->
-            <div id="card-flex" class="min-w-[85vw] md:min-w-0 snap-center offer-card bg-white rounded-3xl shadow-card overflow-hidden border-2 border-transparent hover:border-vivi-orange flex flex-col transition-all duration-300">
-                <div class="bg-vivi-orange p-6 text-center text-white relative">
-                    <div class="text-sm font-medium opacity-90 mb-1" id="flex-name">VIVIconsapevole Flex</div>
-                    <h2 class="text-3xl font-extrabold uppercase tracking-tight">PREZZO VARIABILE</h2>
+            <div id="card-flex" class="min-w-[85vw] md:min-w-0 snap-center offer-card bg-white rounded-2xl md:rounded-3xl shadow-card overflow-hidden border-2 border-transparent hover:border-vivi-orange flex flex-col transition-all duration-300">
+                <div class="bg-vivi-orange p-4 md:p-6 text-center text-white relative">
+                    <div class="text-xs md:text-sm font-medium opacity-90 mb-1" id="flex-name">VIVIconsapevole Flex</div>
+                    <h2 class="text-2xl md:text-3xl font-extrabold uppercase tracking-tight">PREZZO VARIABILE</h2>
                 </div>
 
-                <div class="p-6 pt-8 flex-grow flex flex-col bg-gradient-to-b from-orange-50/50 to-white">
-                    <div class="text-center mb-6">
-                        <div class="text-vivi-orange font-bold text-sm bg-orange-100/50 inline-block px-4 py-1.5 rounded-lg mb-4" id="flex-desc">
+                <div class="p-4 md:p-8 flex-grow flex flex-col bg-gradient-to-b from-orange-50/50 to-white">
+                    <div class="text-center mb-4 md:mb-6">
+                        <div class="text-vivi-orange font-bold text-xs md:text-sm bg-orange-100/50 inline-block px-3 py-1 md:px-4 md:py-1.5 rounded-lg mb-3 md:mb-4" id="flex-desc">
                             Prezzo indicizzato, variabile mensilmente
                         </div>
                         <div class="dashed-line opacity-30"></div>
-                        <h4 class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">DEDICATA A CHI...</h4>
-                        <p class="text-sm text-gray-600 leading-relaxed px-4">
+                        <h4 class="text-[10px] md:text-xs font-bold text-gray-500 uppercase tracking-widest mb-1 md:mb-2">DEDICATA A CHI...</h4>
+                        <p class="text-xs md:text-sm text-gray-600 leading-relaxed px-2 md:px-4">
                             Desidera un'offerta che colga le <strong>opportunità di variazione dei prezzi nel mercato</strong>.
                         </p>
                     </div>
 
-                    <div class="text-center mb-6">
-                        <div class="flex items-center justify-center gap-2 text-vivi-teal-light font-bold text-lg">
+                    <div class="text-center mb-4 md:mb-6">
+                        <div class="flex items-center justify-center gap-2 text-vivi-teal-light font-bold text-base md:text-lg">
                             <i class="fas fa-check-circle"></i>
                             <span id="flex-main-bonus">BONUS FINO A ---€*</span>
                         </div>
-                        <p class="text-xs text-gray-400 uppercase tracking-wide mt-1" id="flex-bonus-sub">attivando...</p>
+                        <p class="text-[10px] md:text-xs text-gray-400 uppercase tracking-wide mt-1" id="flex-bonus-sub">attivando...</p>
                     </div>
 
-                    <div class="text-center mb-8">
-                        <button class="bg-vivi-orange text-white font-bold py-3.5 px-10 rounded-full shadow-lg hover:bg-orange-600 transition-all transform hover:-translate-y-0.5 text-sm uppercase tracking-wide w-full md:w-auto">
+                    <div class="text-center mb-6 md:mb-8">
+                        <button class="bg-vivi-orange text-white font-bold py-3 px-8 md:py-3.5 md:px-10 rounded-full shadow-lg hover:bg-orange-600 transition-all transform hover:-translate-y-0.5 text-xs md:text-sm uppercase tracking-wide w-full md:w-auto">
                             Passa a VIVI energia
                         </button>
                     </div>
 
-                    <div id="flex-boxes-container" class="space-y-5 mt-auto">
+                    <div id="flex-boxes-container" class="space-y-3 md:space-y-5 mt-auto">
                         <!-- Inseriti via JS -->
                     </div>
 
-                    <div class="text-center mt-5">
-                        <a href="#" class="text-xs text-gray-400 underline hover:text-vivi-orange">Scopri il dettaglio dei costi</a>
+                    <div class="text-center mt-4 md:mt-5">
+                        <a href="#" class="text-[10px] md:text-xs text-gray-400 underline hover:text-vivi-orange">Scopri il dettaglio dei costi</a>
                     </div>
                 </div>
             </div>
@@ -218,23 +220,23 @@
 
     <!-- TEMPLATE BOX BIANCO -->
     <template id="white-box-template">
-        <div class="bg-white rounded-2xl shadow-inner-box p-6 relative border border-gray-100">
+        <div class="bg-white rounded-xl md:rounded-2xl shadow-inner-box p-4 md:p-6 relative border border-gray-100">
             <!-- Badge Bonus Ingrandito -->
-            <div class="absolute -top-3 right-6 text-white px-5 py-2 rounded-bl-xl rounded-tr-xl shadow-md flex flex-col items-center leading-tight bonus-badge-container">
-                <span class="text-[10px] opacity-90 font-medium">BONUS fino a</span>
-                <span class="text-2xl font-bold box-bonus-val">132€*</span>
+            <div class="absolute -top-3 right-4 md:right-6 text-white px-3 py-1.5 md:px-5 md:py-2 rounded-bl-xl rounded-tr-xl shadow-md flex flex-col items-center leading-tight bonus-badge-container">
+                <span class="text-[9px] md:text-[10px] opacity-90 font-medium">BONUS fino a</span>
+                <span class="text-lg md:text-2xl font-bold box-bonus-val">132€*</span>
             </div>
 
             <!-- Header: Icona + Titolo -->
-            <div class="flex items-center gap-4 mb-5">
-                <!-- ICONA -->
-                <div class="w-20 h-20 flex items-center justify-center text-white text-lg box-icon-bg p-0 flex-shrink-0">
+            <div class="flex items-center gap-3 md:gap-4 mb-3 md:mb-5">
+                <!-- ICONA: w-16 su mobile, w-20 su desktop -->
+                <div class="w-16 h-16 md:w-20 md:h-20 flex items-center justify-center text-white text-lg box-icon-bg p-0 flex-shrink-0">
                     <img src="" alt="Icon" class="box-icon-img w-full h-full object-contain">
                 </div>
                 <!-- Titolo + Green Label -->
                 <div class="flex flex-col justify-center">
-                    <span class="font-bold text-gray-800 text-lg box-title leading-none">Luce</span>
-                    <!-- Green Tag: Niente bordo, sotto a Luce -->
+                    <span class="font-bold text-gray-800 text-base md:text-lg box-title leading-none">Luce</span>
+                    <!-- Green Tag -->
                     <span class="hidden box-green-tag mt-1 flex items-start gap-1">
                          <!-- Il contenuto verrà aggiornato via JS -->
                     </span>
@@ -242,7 +244,7 @@
             </div>
 
             <!-- Content: Fasce / Prezzi -->
-            <div class="box-price-content space-y-2.5">
+            <div class="box-price-content space-y-1.5 md:space-y-2.5">
                 <!-- Rows injected here -->
             </div>
 
@@ -252,10 +254,10 @@
             <!-- Quota Fissa -->
             <div class="flex justify-between items-end">
                 <div>
-                    <div class="text-xs font-bold text-gray-700">Quota fissa</div>
-                    <div class="text-[9px] text-gray-400">IVA e imposte escluse</div>
+                    <div class="text-[10px] md:text-xs font-bold text-gray-700">Quota fissa</div>
+                    <div class="text-[8px] md:text-[9px] text-gray-400">IVA e imposte escluse</div>
                 </div>
-                <div class="text-lg font-bold text-gray-800 box-quota-val">10 €/mese</div>
+                <div class="text-base md:text-lg font-bold text-gray-800 box-quota-val">10 €/mese</div>
             </div>
         </div>
     </template>
@@ -283,7 +285,7 @@
                 const img = btn.querySelector('img');
                 
                 // Stato inattivo default
-                btn.className = "tab-btn tab-inactive px-6 py-3 rounded-full text-sm flex items-center gap-2";
+                btn.className = "tab-btn tab-inactive px-4 py-2 md:px-6 md:py-3 rounded-full text-xs md:text-sm flex items-center gap-2";
                 img.classList.add('opacity-60', 'brightness-0');
                 img.classList.remove('invert');
 
@@ -413,9 +415,10 @@
                 const greenTag = clone.querySelector('.box-green-tag');
                 greenTag.classList.remove('hidden');
                 // Label Green: testo verde, piccola icona, senza bordo, SU UNA RIGA
+                // Text size ridotto per mobile text-[9px] md:text-[10px]
                 greenTag.innerHTML = `
-                    <img src="https://v.fastcdn.co/t/4fe35e38/103c13e8/1769856097-65077022-30x30-eco-24dp-6EC18A-FILL.png" class="w-4 h-4 object-contain" alt="Green">
-                    <span class="text-left text-vivi-green text-[10px] font-bold whitespace-nowrap">100% energia elettrica green</span>
+                    <img src="https://v.fastcdn.co/t/4fe35e38/103c13e8/1769856097-65077022-30x30-eco-24dp-6EC18A-FILL.png" class="w-3 h-3 md:w-4 md:h-4 object-contain" alt="Green">
+                    <span class="text-left text-vivi-green text-[9px] md:text-[10px] font-bold whitespace-nowrap">100% energia elettrica green</span>
                 `;
 
                 bonusBadge.classList.add('bg-gradient-luce');
@@ -434,7 +437,7 @@
 
             const contentDiv = clone.querySelector('.box-price-content');
             const priceTitle = document.createElement('div');
-            priceTitle.className = "text-xs font-bold text-gray-700 mb-3";
+            priceTitle.className = "text-[10px] md:text-xs font-bold text-gray-700 mb-2 md:mb-3";
             priceTitle.textContent = offerType === 'fix' ? 
                 `Prezzo ${isLuce ? 'energia' : 'gas'} bloccato per due anni` : 
                 `Prezzo ${isLuce ? 'energia' : 'gas'}`;
@@ -451,15 +454,16 @@
                     fasce.forEach(f => {
                         const row = document.createElement('div');
                         row.className = "flex justify-between items-center mb-1";
-                        row.innerHTML = `<span class="text-gray-500 text-sm font-medium">${f.label}</span><span class="font-bold text-gray-800 text-lg">${f.value}</span>`;
+                        // Price size mobile optimized
+                        row.innerHTML = `<span class="text-gray-500 text-xs md:text-sm font-medium">${f.label}</span><span class="font-bold text-gray-800 text-base md:text-lg">${f.value}</span>`;
                         contentDiv.appendChild(row);
                     });
                 } else {
                     let val = "0,3830 €/Smc";
                     if(data.gas && data.gas.length > 0) val = data.gas[0].value;
                     const row = document.createElement('div');
-                    row.className = "flex justify-between items-center text-sm";
-                    row.innerHTML = `<span class="text-gray-500">Materia prima</span><span class="font-bold text-gray-800 text-lg">${val}</span>`;
+                    row.className = "flex justify-between items-center text-xs md:text-sm";
+                    row.innerHTML = `<span class="text-gray-500">Materia prima</span><span class="font-bold text-gray-800 text-base md:text-lg">${val}</span>`;
                     contentDiv.appendChild(row);
                 }
             } else {
@@ -483,9 +487,9 @@
                 if (isLuce) {
                     ['Fascia 1', 'Fascia 2', 'Fascia 3'].forEach((f, idx) => {
                         const row = document.createElement('div');
-                        row.className = "flex justify-between items-center text-sm min-h-[24px]";
+                        row.className = "flex justify-between items-center text-xs md:text-sm min-h-[20px] md:min-h-[24px]";
                         if (idx === 1) {
-                            row.innerHTML = `<span class="text-gray-500">${f}</span><span class="font-bold text-gray-800 text-lg">${indexName} + ${spread}</span>`;
+                            row.innerHTML = `<span class="text-gray-500">${f}</span><span class="font-bold text-gray-800 text-base md:text-lg">${indexName} + ${spread}</span>`;
                         } else {
                             row.innerHTML = `<span class="text-gray-500">${f}</span>`;
                         }
@@ -493,8 +497,8 @@
                     });
                 } else {
                     const row = document.createElement('div');
-                    row.className = "flex justify-between items-center text-sm";
-                    row.innerHTML = `<span class="text-gray-500">Prezzo gas</span><span class="font-bold text-gray-800 text-lg">${indexName} + ${spread}</span>`;
+                    row.className = "flex justify-between items-center text-xs md:text-sm";
+                    row.innerHTML = `<span class="text-gray-500">Prezzo gas</span><span class="font-bold text-gray-800 text-base md:text-lg">${indexName} + ${spread}</span>`;
                     contentDiv.appendChild(row);
                 }
             }
